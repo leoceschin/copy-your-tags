@@ -1,6 +1,8 @@
 package com.ceschin.copyyourtag.models;
 
-public class TagModel {
+import java.io.Serializable;
+
+public class TagModel implements Serializable {
     private long id;
     private String tags;
 

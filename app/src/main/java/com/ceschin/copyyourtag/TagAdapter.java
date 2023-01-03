@@ -11,28 +11,50 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ceschin.copyyourtag.models.TagModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class TagAdapter extends ArrayAdapter<TagModel> {
-    public TagAdapter(Context context, List<TagModel> tagModels, int resource) {
-        super(context, 0, tagModels);
+public class TagAdapter extends BaseAdapter {
+    Context context;
+    List<TagModel> tagModels;
+
+
+    public TagAdapter(Context ctx, List<TagModel> tagModels) {
+        this.context = ctx;
+        this.tagModels = tagModels;
 
     }
 
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public int getCount() {
+        return tagModels.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return tagModels.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return tagModels.get(position).getId();
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        TagModel currentTag = tagModels.get(position);
+
         View listItemVIew = convertView;
         if(listItemVIew == null){
-            listItemVIew = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+            listItemVIew = LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
         }
 
-        TagModel currentTag = getItem(position);
         TextView tvTags = (TextView) listItemVIew.findViewById(R.id.tvViewTags);
         tvTags.setText(currentTag.getTags());
 
@@ -42,7 +64,7 @@ public class TagAdapter extends ArrayAdapter<TagModel> {
             @Override
             public void onClick(View view) {
 
-                setClipboard(getContext(), tvTags.getText().toString());
+                setClipboard(context, tvTags.getText().toString());
             }
         });
 
@@ -50,9 +72,17 @@ public class TagAdapter extends ArrayAdapter<TagModel> {
     }
 
     private void setClipboard(Context ctx, String text){
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(getContext(), ClipboardManager.class);
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(context, ClipboardManager.class);
         ClipData clip = ClipData.newPlainText("Copied tags", text);
         clipboard.setPrimaryClip(clip);
 
+        makeToast(ctx, "Tags copied");
+
     }
+
+    private void makeToast (Context ctx, String text){
+        Toast toast = Toast.makeText(ctx, text, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
 }

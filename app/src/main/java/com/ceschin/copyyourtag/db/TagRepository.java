@@ -51,4 +51,27 @@ public class TagRepository {
         return tags;
 
     }
+
+    public void updateTag(TagModel tagModel){
+        SQLiteDatabase db = databaseConfig.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(DatabaseConfig.COLUMN_TAGS, tagModel.getTags());
+
+        db.update(DatabaseConfig.TABLE_TAGS,
+                cv,
+                DatabaseConfig.COLUMN_ID+ " = ?",
+                new String[]{ String.valueOf(tagModel.getId()) });
+
+        db.close();
+    }
+
+    public void deleteTag(TagModel tagModel){
+        SQLiteDatabase db = databaseConfig.getWritableDatabase();
+        db.delete(DatabaseConfig.TABLE_TAGS,
+                DatabaseConfig.COLUMN_ID+ " = ?",
+                new String[]{ String.valueOf(tagModel.getId()) });
+        db.close();
+    }
+
 }

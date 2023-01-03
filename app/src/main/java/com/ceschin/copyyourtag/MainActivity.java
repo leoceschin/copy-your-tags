@@ -3,7 +3,9 @@ package com.ceschin.copyyourtag;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -12,6 +14,7 @@ import com.ceschin.copyyourtag.models.TagModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,11 +41,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(it);
             }
         });
+        final List<TagModel> tagsList;
         try{
-            List<TagModel> tagsList;
             tagsList = tagRepository.getAllTags();
             if(tagsList != null){
-                TagAdapter adapter = new TagAdapter(this, tagsList, 0);
+                TagAdapter adapter = new TagAdapter(this, tagsList);
                 listViewTags.setAdapter(adapter);
             }
         }catch(Exception e){
@@ -50,6 +53,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        listViewTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                TagModel tagModel = (TagModel)adapterView.getItemAtPosition(position);
+
+                Intent it = new Intent(MainActivity.this, AddActivity.class);
+                it.putExtra("tags", tagModel);
+
+                startActivity(it);
+
+
+            }
+        });
 
 
 
