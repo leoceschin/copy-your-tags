@@ -20,9 +20,9 @@ public class DatabaseConfig extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(
-                "CREATE TABLE " + TABLE_TAGS + " (" +
-                        COLUMN_ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMN_TAGS + "TEXT NOT NULL)"
+                "CREATE TABLE IF NOT EXISTS " + TABLE_TAGS + " (" +
+                        COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_TAGS + " TEXT NOT NULL)"
         );
     }
 
